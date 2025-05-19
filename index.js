@@ -2,13 +2,27 @@ const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 const { analizarEncuestas } = require('./ia');
+
+// Cargar variables de entorno
 require('dotenv').config();
 
-// ✅ Leer clave de Firebase desde variable de entorno en formato JSON
-const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+const firebaseConfigJSON = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
+
+if (!firebaseConfigJSON) {
+  throw new Error('La variable de entorno GOOGLE_APPLICATION_CREDENTIALS_JSON no está definida');
+}
+
+let serviceAccount;
+
+try {
+  serviceAccount = JSON.parse(firebaseConfigJSON);
+} catch (e) {
+  console.error('Error al parsear GOOGLE_APPLICATION_CREDENTIALS_JSON:', e);
+  process.exit(1);
+}
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
 });
 
 const db = admin.firestore();
