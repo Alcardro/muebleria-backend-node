@@ -1,9 +1,10 @@
+// index.js
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 const { analizarEncuestas } = require('./ia');
 
-// Cargar variables de entorno
+// Cargar variables de entorno desde .env (si lo usas localmente)
 require('dotenv').config();
 
 const firebaseConfigJSON = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
@@ -59,6 +60,7 @@ app.get('/analizar', async (req, res) => {
     console.log("Datos procesados para análisis:", datos);
 
     const resultado = await analizarEncuestas(datos);
+
     res.json(resultado);
 
   } catch (error) {
@@ -67,7 +69,9 @@ app.get('/analizar', async (req, res) => {
   }
 });
 
+// Definir puerto para el servidor
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Servidor escuchando en puerto ${PORT}`);
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 });
