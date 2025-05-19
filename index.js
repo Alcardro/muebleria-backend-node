@@ -2,13 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 const { analizarEncuestas } = require('./ia');
-
-// 🔐 Cargar variables de entorno
 require('dotenv').config();
 
-// 🔐 Inicializar Firebase Admin usando ruta desde variable de entorno
+// ✅ Leer clave de Firebase desde variable de entorno en formato JSON
+const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+
 admin.initializeApp({
-  credential: admin.credential.cert(require(process.env.GOOGLE_APPLICATION_CREDENTIALS))
+  credential: admin.credential.cert(serviceAccount)
 });
 
 const db = admin.firestore();
