@@ -7,7 +7,10 @@ const { analizarEncuestas } = require('./ia');
 const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert({
+    ...serviceAccount,
+    private_key: serviceAccount.private_key.replace(/\\n/g, '\n'),
+  }),
 });
 
 const db = admin.firestore();
