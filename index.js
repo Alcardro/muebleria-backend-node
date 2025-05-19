@@ -7,20 +7,13 @@ const { analizarEncuestas } = require('./ia');
 // Cargar variables de entorno desde .env (si lo usas localmente)
 require('dotenv').config();
 
-const firebaseConfigJSON = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
+const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
-if (!firebaseConfigJSON) {
-  throw new Error('La variable de entorno GOOGLE_APPLICATION_CREDENTIALS_JSON no está definida');
+if (!serviceAccountPath) {
+  throw new Error('La variable de entorno GOOGLE_APPLICATION_CREDENTIALS no está definida');
 }
 
-let serviceAccount;
-
-try {
-  serviceAccount = JSON.parse(firebaseConfigJSON);
-} catch (e) {
-  console.error('Error al parsear GOOGLE_APPLICATION_CREDENTIALS_JSON:', e);
-  process.exit(1);
-}
+const serviceAccount = require(serviceAccountPath);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
