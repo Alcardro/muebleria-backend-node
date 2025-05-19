@@ -4,16 +4,7 @@ const cors = require('cors');
 const admin = require('firebase-admin');
 const { analizarEncuestas } = require('./ia');
 
-// Cargar variables de entorno desde .env (si lo usas localmente)
-require('dotenv').config();
-
-const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-
-if (!serviceAccountPath) {
-  throw new Error('La variable de entorno GOOGLE_APPLICATION_CREDENTIALS no está definida');
-}
-
-const serviceAccount = require(serviceAccountPath);
+const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
