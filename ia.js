@@ -34,9 +34,9 @@ async function analizarEncuestas(datos) {
   }
 
   // Recolectar valores
-  encuestas.forEach(encuesta => {
+  datos.forEach(datos => {
     for (let i = 0; i < numPreguntas; i++) {
-      let raw = encuesta[i];
+      let raw = datos[i];
       let valor;
       if (i === 6) {
         // QUESTION_7: booleano a 1/0
