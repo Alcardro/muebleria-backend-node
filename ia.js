@@ -29,7 +29,7 @@ async function analizarEncuestas(datos) {
       conteos: {},
       promedio: 0,
       desviacion: 0,
-      recomendacion: null
+      recomendacion: "No se encontraron problemas relevantes"
     });
   }
 
