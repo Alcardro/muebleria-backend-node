@@ -1,7 +1,7 @@
 // ia.js - Análisis por pregunta
 
 /**
- * Recibe un array de encuestas, donde cada encuesta es un array de 10 valores:
+ * Recibe un array de datos, donde cada dato es un array de 10 valores: es un array de 10 valores:
  * - índices 0-5 y 7-8: valores numéricos (strings o números)
  * - índice 6: booleano o "true"/"false"
  * - índice 9: comentario (string)
@@ -17,7 +17,7 @@ function calcularDesviacionEstandar(valores, promedio) {
   return parseFloat(Math.sqrt(mediaDiff).toFixed(2));
 }
 
-async function analizarPorPregunta(encuestas) {
+async function analizarEncuestas(datos) {
   const numPreguntas = 9; // Sólo preguntas cuantitativas
   const resultados = [];
 
@@ -78,4 +78,4 @@ async function analizarPorPregunta(encuestas) {
   return { analisis: resultados };
 }
 
-module.exports = { analizarPorPregunta };
+module.exports = { analizarEncuestas };
