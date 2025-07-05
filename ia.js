@@ -18,10 +18,9 @@ function calcularDesviacionEstandar(valores, promedio) {
 }
 
 async function analizarEncuestas(datos) {
-  const numPreguntas = 9; // Sólo preguntas cuantitativas
+  const numPreguntas = 9;
   const resultados = [];
 
-  // Inicializar estructura
   for (let i = 0; i < numPreguntas; i++) {
     resultados.push({
       pregunta: i + 1,
@@ -34,23 +33,23 @@ async function analizarEncuestas(datos) {
   }
 
   // Recolectar valores
-  datos.forEach(datos => {
+  datos.forEach(dato => {
     for (let i = 0; i < numPreguntas; i++) {
-      let raw = datos[i];
+      let raw = dato[i];
       let valor;
+
       if (i === 6) {
-        // QUESTION_7: booleano a 1/0
-        valor = raw === true || raw === 'true' ? 1 : 0;
+        valor = raw === true || raw === "true" ? 1 : 0;
       } else {
-        // Numérico
         valor = parseInt(raw, 10);
         if (isNaN(valor)) valor = 0;
       }
+
       resultados[i].valores.push(valor);
     }
   });
 
-  // Calcular métricas y recomendaciones
+  // Asignar recomendaciones por pregunta
   resultados.forEach(item => {
     const { valores, pregunta } = item;
     const sum = valores.reduce((a, b) => a + b, 0);
@@ -59,23 +58,52 @@ async function analizarEncuestas(datos) {
     item.promedio = parseFloat(avg.toFixed(2));
     item.desviacion = calcularDesviacionEstandar(valores, avg);
 
-    // Conteos por valor
     valores.forEach(v => {
       item.conteos[v] = (item.conteos[v] || 0) + 1;
     });
 
-    // Recomendación para preguntas 1-8
-    if (pregunta < numPreguntas) {
-      item.recomendacion = item.promedio >= 3
-        ? 'Buen servicio. Mantener calidad.'
-        : 'Se necesita mejorar el servicio.';
+    // Recomendaciones personalizadas por pregunta
+    if (pregunta <= numPreguntas) {
+      if (avg < 3) {
+        switch (pregunta) {
+          case 1:
+            item.recomendacion = "Mejorar la calidad de los productos ofrecidos.";
+            break;
+          case 2:
+            item.recomendacion = "Revisar la relación entre precio y calidad percibida.";
+            break;
+          case 3:
+            item.recomendacion = "Reducir tiempos de entrega o espera.";
+            break;
+          case 4:
+            item.recomendacion = "Capacitar al personal en empatía y atención personalizada.";
+            break;
+          case 5:
+            item.recomendacion = "Reforzar el conocimiento del personal sobre los productos.";
+            break;
+          case 6:
+            item.recomendacion = "Fortalecer el soporte postventa y seguimiento de reclamos.";
+            break;
+          case 7:
+            item.recomendacion = "Monitorear y mejorar la interacción directa con el cliente.";
+            break;
+          case 8:
+            item.recomendacion = "Mejorar la limpieza y presentación de la tienda.";
+            break;
+          default:
+            item.recomendacion = "Área crítica. Revisión necesaria.";
+        }
+      } else if (item.desviacion > 1) {
+        item.recomendacion = "Aunque el promedio es aceptable, hay alta variabilidad. Investigue diferencias entre clientes.";
+      } else {
+        item.recomendacion = "Buen servicio. Mantener calidad.";
+      }
     }
 
-    // Limpiar arreglo de valores
     delete item.valores;
   });
 
   return { analisis: resultados };
 }
 
-module.exports = { analizarEncuestas }; 
+module.exports = { analizarEncuestas };
